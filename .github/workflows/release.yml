@@ -21,7 +21,7 @@ jobs:
           dotnet-version: '6.0.x'
           source-url: https://nuget.pkg.github.com/BunnyWay/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.BUNNYNET_DEVOPS_PAT }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: build
         run: dotnet build -c Release
       - name: test
