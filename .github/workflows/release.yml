@@ -1,0 +1,37 @@
+name: 'Release InfluxDB client'
+on:
+  release:
+    types: [published]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.BUNNYNET_DEVOPS_PAT }}
+          submodules: recursive
+      - name: Generate release name
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          echo "release_name=$REF_NAME-$TARGET" >> $GITHUB_ENV
+          echo "BUILD_VERSION=${REF_NAME//v/}" >> $GITHUB_ENV
+      - name: Echo vars
+        run: |
+          echo "Release name: ${{ env.release_name }} Build version: ${{ env.BUILD_VERSION }}"
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+          source-url: https://nuget.pkg.github.com/BunnyWay/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.BUNNYNET_DEVOPS_PAT }}
+      - name: build
+        run: dotnet build -c Release
+      - name: test
+        run: dotnet test -c Release --no-build --no-restore
+          
+      - name: Pack InfluxDB client
+        run: dotnet pack -c Release InfluxDB.Net/InfluxDB.Net.csproj
+
+      - name: Publish NuGet package
+        run: dotnet nuget push nupkg/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "https://nuget.pkg.github.com/BunnyWay/index.json"
