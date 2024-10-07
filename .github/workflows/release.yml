@@ -26,7 +26,7 @@ jobs:
         run: dotnet build -c Release InfluxDB.Net/InfluxDB.Net.csproj
           
       - name: Pack InfluxDB client
-        run: dotnet pack -c Release InfluxDB.Net/InfluxDB.Net.csproj
+        run: dotnet pack -c Release InfluxDB.Net/InfluxDB.Net.csproj --output nupkg
 
       - name: Publish NuGet package
         run: dotnet nuget push nupkg/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "https://nuget.pkg.github.com/BunnyWay/index.json"
