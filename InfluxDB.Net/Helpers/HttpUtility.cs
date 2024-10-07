@@ -6,7 +6,7 @@ namespace InfluxDB.Net.Helpers
     {
         public static string UrlEncode(string parameter)
         {
-            return Uri.EscapeUriString(parameter);
+            return Uri.EscapeDataString(parameter);
         }
     }
 }
