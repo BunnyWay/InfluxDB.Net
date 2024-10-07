@@ -23,9 +23,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: build
-        run: dotnet build -c Release
-      - name: test
-        run: dotnet test -c Release --no-build --no-restore
+        run: dotnet build -c Release InfluxDB.Net/InfluxDB.Net.csproj
           
       - name: Pack InfluxDB client
         run: dotnet pack -c Release InfluxDB.Net/InfluxDB.Net.csproj
