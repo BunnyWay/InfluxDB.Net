@@ -6,6 +6,7 @@ using InfluxDB.Net.Contracts;
 using InfluxDB.Net.Enums;
 using InfluxDB.Net.Infrastructure.Influx;
 using InfluxDB.Net.Infrastructure.Configuration;
+using System.Threading;
 
 namespace InfluxDB.Net.Client
 {
@@ -65,38 +66,38 @@ namespace InfluxDB.Net.Client
 
         #region Database
 
-        public async Task<InfluxDbApiResponse> CreateDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, Database database)
+        public async Task<InfluxDbApiResponse> CreateDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, Database database, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.CreateDatabase(errorHandlers, database);
+            return await _influxDbClient.CreateDatabase(errorHandlers, database, cancellationToken);
         }
 
-        public async Task<InfluxDbApiResponse> DropDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name)
+        public async Task<InfluxDbApiResponse> DropDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.DropDatabase(errorHandlers, name);
+            return await _influxDbClient.DropDatabase(errorHandlers, name, cancellationToken);
         }
 
-        public async Task<InfluxDbApiResponse> ShowDatabases(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
+        public async Task<InfluxDbApiResponse> ShowDatabases(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.ShowDatabases(errorHandlers);
+            return await _influxDbClient.ShowDatabases(errorHandlers, cancellationToken);
         }
 
         #endregion Database
 
         #region Basic Querying
 
-        public async Task<InfluxDbApiWriteResponse> Write(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, WriteRequest request, string timePrecision)
+        public async Task<InfluxDbApiWriteResponse> Write(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, WriteRequest request, string timePrecision, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.Write(errorHandlers, request, timePrecision);
+            return await _influxDbClient.Write(errorHandlers, request, timePrecision, cancellationToken);
         }
 
-        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, string query)
+        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, string query, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.Query(errorHandlers, name, query);
+            return await _influxDbClient.Query(errorHandlers, name, query, cancellationToken);
         }
 
-        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, List<string> queries)
+        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, List<string> queries, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.Query(errorHandlers, name, queries);
+            return await _influxDbClient.Query(errorHandlers, name, queries, cancellationToken);
         }
 
         #endregion Basic Querying
@@ -117,9 +118,9 @@ namespace InfluxDB.Net.Client
 
         #region Series
 
-        public async Task<InfluxDbApiResponse> DropSeries(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string database, string name)
+        public async Task<InfluxDbApiResponse> DropSeries(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string database, string name, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.DropSeries(errorHandlers, database, name);
+            return await _influxDbClient.DropSeries(errorHandlers, database, name, cancellationToken);
         }
 
         #endregion Series
@@ -198,9 +199,9 @@ namespace InfluxDB.Net.Client
 
         #region Other
 
-        public async Task<InfluxDbApiResponse> Ping(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
+        public async Task<InfluxDbApiResponse> Ping(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.Ping(errorHandlers);
+            return await _influxDbClient.Ping(errorHandlers, cancellationToken);
         }
 
         public async Task<InfluxDbApiResponse> ForceRaftCompaction(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
@@ -228,9 +229,9 @@ namespace InfluxDB.Net.Client
             return await _influxDbClient.RemoveServers(errorHandlers, id);
         }
 
-        public async Task<InfluxDbApiResponse> AlterRetentionPolicy(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string policyName, string dbName, string duration, int replication)
+        public async Task<InfluxDbApiResponse> AlterRetentionPolicy(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string policyName, string dbName, string duration, int replication, CancellationToken cancellationToken = default)
         {
-            return await _influxDbClient.AlterRetentionPolicy(errorHandlers, policyName, dbName, duration, replication);
+            return await _influxDbClient.AlterRetentionPolicy(errorHandlers, policyName, dbName, duration, replication, cancellationToken);
         }
 
         public IFormatter GetFormatter()
