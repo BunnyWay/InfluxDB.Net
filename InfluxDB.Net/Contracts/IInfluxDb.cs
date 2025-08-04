@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using InfluxDB.Net.Infrastructure.Influx;
 using InfluxDB.Net.Models;
@@ -25,9 +26,9 @@ namespace InfluxDB.Net.Contracts
 
         Task<InfluxDbApiWriteResponse> WriteAsync(string database, Point[] points, string retenionPolicy = "default");
 
-        Task<List<Serie>> QueryAsync(string database, string query);
+        Task<List<Serie>> QueryAsync(string database, string query, CancellationToken cancellationToken = default);
 
-        Task<List<Serie>> QueryAsync(string database, List<string> queries);
+        Task<List<Serie>> QueryAsync(string database, List<string> queries, CancellationToken cancellationToken = default);
 
         #endregion Basic Querying
 

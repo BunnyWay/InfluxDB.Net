@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using InfluxDB.Net.Client;
 using InfluxDB.Net.Contracts;
@@ -147,11 +148,12 @@ namespace InfluxDB.Net
         /// <param name="database">The name of the database.</param>
         /// <param name="query">The query to execute. For language specification please see
         /// <a href="https://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html">InfluxDb documentation</a>.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A list of Series which matched the query.</returns>
         /// <exception cref="InfluxDbApiException"></exception>
-        public async Task<List<Serie>> QueryAsync(string database, string query)
+        public async Task<List<Serie>> QueryAsync(string database, string query, CancellationToken cancellationToken = default)
         {
-            InfluxDbApiResponse response = await _influxDbClient.Query(NoErrorHandlers, database, query);
+            InfluxDbApiResponse response = await _influxDbClient.Query(NoErrorHandlers, database, query, cancellationToken);
 
             var queryResult = response.ReadAs<QueryResult>();
 
@@ -175,11 +177,12 @@ namespace InfluxDB.Net
         /// <param name="database">The name of the database.</param>
         /// <param name="queries">Queries to execute. For language specification please see
         /// <a href="https://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html">InfluxDb documentation</a>.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A list of Series which matched the queries.</returns>
         /// <exception cref="InfluxDbApiException"></exception>
-        public async Task<List<Serie>> QueryAsync(string database, List<string> queries)
+        public async Task<List<Serie>> QueryAsync(string database, List<string> queries, CancellationToken cancellationToken = default)
         {
-            InfluxDbApiResponse response = await _influxDbClient.Query(NoErrorHandlers, database, queries);
+            InfluxDbApiResponse response = await _influxDbClient.Query(NoErrorHandlers, database, queries, cancellationToken);
 
             var queryResult = response.ReadAs<QueryResult>();
 
