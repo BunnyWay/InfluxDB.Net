@@ -43,33 +43,36 @@ namespace InfluxDB.Net.Client
         /// <summary>Creates the database.</summary>
         /// <param name="errorHandlers">The error handlers.</param>
         /// <param name="database">The database.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> CreateDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, Database database)
+        public async Task<InfluxDbApiResponse> CreateDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, Database database, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string> { { QueryParams.Query, String.Format(QueryStatements.CreateDatabase, database.Name) } },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         /// <summary>Drops the database.</summary>
         /// <param name="errorHandlers">The error handlers.</param>
         /// <param name="name">The name.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> DropDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name)
+        public async Task<InfluxDbApiResponse> DropDatabase(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string> { { QueryParams.Query, String.Format(QueryStatements.DropDatabase, name) } },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         /// <summary>Queries the list of databases.</summary>
         /// <param name="errorHandlers">The error handlers.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> ShowDatabases(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
+        public async Task<InfluxDbApiResponse> ShowDatabases(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string> { { QueryParams.Query, QueryStatements.ShowDatabases } },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         #endregion Database
@@ -80,8 +83,9 @@ namespace InfluxDB.Net.Client
         /// <param name="errorHandlers">The error handlers.</param>
         /// <param name="request">The request.</param>
         /// <param name="timePrecision">The time precision.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiWriteResponse> Write(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, WriteRequest request, string timePrecision)
+        public async Task<InfluxDbApiWriteResponse> Write(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, WriteRequest request, string timePrecision, CancellationToken cancellationToken = default)
         {
             var content = new StringContent(request.GetLines(), Encoding.UTF8, "text/plain");
             var result = await RequestAsync(errorHandlers, HttpMethod.Post, "write", content,
@@ -90,7 +94,7 @@ namespace InfluxDB.Net.Client
                     { QueryParams.Db, request.Database},
                     { QueryParams.Precision, timePrecision }
                 }, true, false,
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
 
             return new InfluxDbApiWriteResponse(result.StatusCode, result.Body);
         }
@@ -99,8 +103,9 @@ namespace InfluxDB.Net.Client
         /// <param name="errorHandlers">The error handlers.</param>
         /// <param name="name">The name.</param>
         /// <param name="query">The query.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, string query)
+        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, string query, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string>
@@ -108,15 +113,16 @@ namespace InfluxDB.Net.Client
                     {QueryParams.Db, name},
                     {QueryParams.Query, query}
                 },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         /// <summary>Queries the endpoint.</summary>
         /// <param name="errorHandlers">The error handlers.</param>
         /// <param name="name">The name.</param>
         /// <param name="queries">The query list.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, List<string> queries)
+        public async Task<InfluxDbApiResponse> Query(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string name, List<string> queries, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string>
@@ -124,7 +130,7 @@ namespace InfluxDB.Net.Client
                     {QueryParams.Db, name},
                     {QueryParams.Query, string.Join("%3B", queries)}
                 },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         #endregion Basic Querying
@@ -145,7 +151,7 @@ namespace InfluxDB.Net.Client
 
         #region Series
 
-        public async Task<InfluxDbApiResponse> DropSeries(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string database, string name)
+        public async Task<InfluxDbApiResponse> DropSeries(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string database, string name, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string>
@@ -153,7 +159,7 @@ namespace InfluxDB.Net.Client
                     { QueryParams.Db, database },
                     { QueryParams.Query, String.Format(QueryStatements.DropSeries, name) }
                 },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         #endregion Series
@@ -234,11 +240,12 @@ namespace InfluxDB.Net.Client
 
         /// <summary>Pings the server.</summary>
         /// <param name="errorHandlers">The error handlers.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns></returns>
-        public async Task<InfluxDbApiResponse> Ping(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
+        public async Task<InfluxDbApiResponse> Ping(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "ping", null, null, false, true,
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         public Task<InfluxDbApiResponse> ForceRaftCompaction(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers)
@@ -272,15 +279,16 @@ namespace InfluxDB.Net.Client
         /// <param name="dbName">Name of the database.</param>
         /// <param name="duration">The duration.</param>
         /// <param name="replication">The replication factor.</param>
+        /// <param name="cancellationToken">Cancellation token to pass to the request.</param>
         /// <returns><see cref="Task{TResult}"/></returns>
-        public async Task<InfluxDbApiResponse> AlterRetentionPolicy(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string policyName, string dbName, string duration, int replication)
+        public async Task<InfluxDbApiResponse> AlterRetentionPolicy(IEnumerable<ApiResponseErrorHandlingDelegate> errorHandlers, string policyName, string dbName, string duration, int replication, CancellationToken cancellationToken = default)
         {
             return await RequestAsync(errorHandlers, HttpMethod.Get, "query", null,
                 new Dictionary<string, string>
                 {
                     {QueryParams.Query, string.Format(QueryStatements.AlterRetentionPolicy, policyName, dbName, duration, replication) }
                 },
-                requestTimeout: _configuration.RequestTimeout);
+                requestTimeout: _configuration.RequestTimeout, cancellationToken: cancellationToken);
         }
 
         public virtual IFormatter GetFormatter()
@@ -310,11 +318,12 @@ namespace InfluxDB.Net.Client
             Dictionary<string, string> extraParams = null,
             bool includeAuthToQuery = true,
             bool headerIsBody = false,
-            TimeSpan? requestTimeout = null)
+            TimeSpan? requestTimeout = null,
+            CancellationToken cancellationToken = default)
         {
             var response = await RequestInnerAsync(requestTimeout,
                 HttpCompletionOption.ResponseHeadersRead,
-                CancellationToken.None,
+                cancellationToken,
                 method,
                 path,
                 content,
@@ -368,9 +377,12 @@ namespace InfluxDB.Net.Client
             Debug.WriteLine("[Request] {0}", request.ToJson());
             if (content != null)
             {
-                Debug.WriteLine("[RequestData] {0}", content.ReadAsStringAsync().Result);
+                var requestData = await content.ReadAsStringAsync();
+                Debug.WriteLine("[RequestData] {0}", requestData);
             }
-
+            
+            cancellationToken.ThrowIfCancellationRequested();
+            
             return await client.SendAsync(request, completionOption, cancellationToken);
         }
 
